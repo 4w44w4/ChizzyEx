@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chizzy Exchange — Trade Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#050a0e; --bg2:#080f14;
+  --green:#00e676; --green-dim:rgba(0,230,118,0.10);
+  --gold:#ffd166; --text:#e2eaf0; --muted:#4a6070;
+  --card:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,10,14,.98),transparent);backdrop-filter:blur(8px);}
+.nav-brand{font-weight:700;font-size:17px;color:var(--green);display:flex;align-items:center;gap:8px;}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 6px var(--green);}50%{opacity:.3;box-shadow:none;}}
+.nav-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--green-dim);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:4px 10px;border-radius:20px;}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 52px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,230,118,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,118,.035) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);}
+.hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,230,118,.08),transparent 70%);top:-100px;right:-150px;animation:floatglow 6s ease-in-out infinite;}
+.hero-glow2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,209,102,.06),transparent 70%);bottom:100px;left:-80px;animation:floatglow 8s ease-in-out infinite reverse;}
+@keyframes floatglow{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
+.hero-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:10px;position:relative;z-index:2;animation:fadeUp .6s ease both;}
+.hero-eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--green);}
+.hero-title{font-weight:700;font-size:clamp(52px,16vw,96px);line-height:.93;letter-spacing:-2px;position:relative;z-index:2;animation:fadeUp .7s ease .1s both;}
+.hero-title .accent{color:var(--green);}
+.hero-title .small-line{font-size:clamp(18px,5vw,30px);font-weight:300;color:var(--muted);display:block;letter-spacing:3px;margin-bottom:6px;}
+.hero-tagline{font-size:15px;color:var(--muted);margin-top:16px;margin-bottom:32px;line-height:1.7;max-width:320px;position:relative;z-index:2;animation:fadeUp .7s ease .2s both;}
+.hero-tagline strong{color:var(--gold);}
+.hero-actions{display:flex;flex-direction:column;gap:10px;position:relative;z-index:2;animation:fadeUp .7s ease .3s both;}
+.cta-wa{background:var(--green);color:#050a0e;padding:17px 28px;font-weight:700;font-size:13px;letter-spacing:1px;text-decoration:none;display:flex;align-items:center;gap:12px;transition:all .3s;border-radius:2px;}
+.cta-wa:hover{background:#00ff88;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,230,118,.25);}
+.cta-rates{background:transparent;color:var(--text);padding:15px 28px;font-weight:500;font-size:13px;letter-spacing:1px;text-decoration:none;border:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:all .3s;border-radius:2px;}
+.cta-rates:hover{border-color:var(--green);color:var(--green);}
+
+.ticker{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 0;overflow:hidden;}
+.ticker-track{display:inline-flex;animation:scroll 20s linear infinite;white-space:nowrap;}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.tick-item .up{color:var(--green);} .tick-item .label{color:var(--muted);}
+.tick-dot{width:4px;height:4px;border-radius:50%;background:var(--muted);}
+
+.section{padding:64px 20px;}
+.sec-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.sec-title{font-weight:700;font-size:clamp(28px,8vw,42px);letter-spacing:-.5px;margin-bottom:32px;}
+
+/* CRYPTO CARDS */
+.crypto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
+.crypto-card{background:var(--card);border:1px solid var(--border);padding:18px 16px;border-radius:4px;display:flex;align-items:center;gap:14px;transition:all .3s;position:relative;overflow:hidden;}
+.crypto-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--c,var(--green)),transparent);opacity:0;transition:opacity .3s;}
+.crypto-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.12);}
+.crypto-card:hover::before{opacity:1;}
+.crypto-logo{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.crypto-name{font-weight:600;font-size:13px;letter-spacing:.3px;}
+.crypto-sub{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:1px;text-transform:uppercase;}
+
+/* GIFT CARDS */
+.giftcard-block{background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:4px;padding:24px 20px;position:relative;overflow:hidden;}
+.giftcard-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,230,118,.4),transparent);}
+.gc-header{margin-bottom:20px;}
+.gc-header-tag{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:4px;}
+.gc-header-title{font-weight:700;font-size:18px;margin-bottom:4px;}
+.gc-header-sub{font-size:12px;color:var(--muted);line-height:1.5;}
+.gc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.gc-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;transition:all .3s;cursor:default;}
+.gc-item:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.05);transform:translateY(-2px);}
+.gc-logo{width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+.gc-name{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);text-align:center;}
+
+/* STEPS */
+.steps{padding:64px 20px;background:var(--bg2);}
+.step-list{display:flex;flex-direction:column;}
+.step-item{display:flex;gap:20px;align-items:flex-start;padding:24px 0;border-bottom:1px solid var(--border);}
+.step-item:last-child{border-bottom:none;}
+.step-num{font-weight:700;font-size:36px;color:rgba(0,230,118,.12);line-height:1;flex-shrink:0;width:48px;transition:color .3s;}
+.step-item:hover .step-num{color:var(--green);}
+.step-title{font-weight:600;font-size:15px;margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* TRUST */
+.trust{padding:64px 20px;}
+.trust-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:24px;}
+.trust-stat{background:var(--bg);padding:24px 12px;text-align:center;}
+.trust-num{font-weight:700;font-size:28px;color:var(--green);display:block;letter-spacing:-.5px;}
+.trust-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block;}
+.trust-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.badge{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:11px;color:var(--text);letter-spacing:.5px;}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+
+/* CTA */
+.cta-block{margin:0 20px 64px;background:linear-gradient(135deg,rgba(0,230,118,.07),rgba(255,209,102,.04));border:1px solid rgba(0,230,118,.15);padding:40px 24px;text-align:center;position:relative;overflow:hidden;border-radius:4px;}
+.cta-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.cta-eyebrow{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.cta-heading{font-weight:700;font-size:clamp(28px,9vw,44px);letter-spacing:-.5px;margin-bottom:8px;line-height:1.1;}
+.cta-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
+.cta-phone{font-weight:700;font-size:20px;color:var(--green);letter-spacing:2px;margin-bottom:24px;display:block;}
+.wa-big{display:inline-flex;align-items:center;gap:10px;background:var(--green);color:#050a0e;padding:17px 36px;font-weight:700;font-size:13px;letter-spacing:1px;text-decoration:none;border-radius:2px;transition:all .3s;position:relative;z-index:1;}
+.wa-big:hover{background:#00ff88;transform:translateY(-2px);box-shadow:0 10px 40px rgba(0,230,118,.3);}
+
+footer{border-top:1px solid var(--border);padding:28px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-brand{font-weight:700;font-size:14px;color:var(--green);display:flex;align-items:center;gap:6px;}
+.footer-copy{font-size:10px;color:var(--muted);letter-spacing:1px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><div class="nav-dot"></div>Chizzy Exchange</div>
+  <span class="nav-badge">Active 24/7</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div><div class="hero-glow"></div><div class="hero-glow2"></div>
+  <p class="hero-eyebrow">Certified · Trusted · Fast</p>
+  <h1 class="hero-title"><span class="small-line">Trade With</span>CHIZZY<br/><span class="accent">EXCHANGE</span></h1>
+  <p class="hero-tagline"><strong>"As you wan sell am, we wan buy am."</strong><br/>Sweet rates. Fast payment. Zero stress.</p>
+  <div class="hero-actions">
+    <a href="https://wa.me/2335028501111" class="cta-wa"><span>💬</span> Start Trading on WhatsApp</a>
+    <a href="#trade" class="cta-rates"><span>↓</span> See What We Buy</a>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="tick-item"><span class="label">Bitcoin</span><span class="up">BTC ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">USDT</span><span class="up">Buying Now</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">iTunes · Amazon · Steam</span><span class="up">Gift Cards ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">Ethereum</span><span class="up">ETH ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">PayPal</span><span class="up">Funds Accepted</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">TRON</span><span class="up">TRX ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">Active</span><span class="up">24 / 7</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">Bitcoin</span><span class="up">BTC ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">USDT</span><span class="up">Buying Now</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">iTunes · Amazon · Steam</span><span class="up">Gift Cards ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">Ethereum</span><span class="up">ETH ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">PayPal</span><span class="up">Funds Accepted</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">TRON</span><span class="up">TRX ✓</span></span><span class="tick-dot"></span>
+    <span class="tick-item"><span class="label">Active</span><span class="up">24 / 7</span></span><span class="tick-dot"></span>
+  </div>
+</div>
+
+<section class="section" id="trade">
+  <p class="sec-label">Assets We Accept</p>
+  <h2 class="sec-title">What We Buy</h2>
+
+  <!-- CRYPTO WITH REAL LOGOS -->
+  <div class="crypto-grid">
+
+    <!-- Bitcoin -->
+    <div class="crypto-card" style="--c:#f7931a">
+      <div class="crypto-logo" style="background:#f7931a20;">
+        <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+          <path d="M22.5 13.8c.3-2.1-1.3-3.2-3.5-4l.7-2.8-1.7-.4-.7 2.8c-.5-.1-.9-.2-1.4-.3l.7-2.8-1.7-.4-.7 2.8c-.4-.1-.7-.2-1.1-.3l-2.4-.6-.5 1.8s1.3.3 1.3.3c.7.2.8.6.8 1l-.8 3.2.2.1-.2-.1-1.1 4.5c-.1.2-.3.5-.8.4l-1.3-.3-.9 2h2.3c.4.1.8.2 1.2.3l-.7 2.8 1.7.4.7-2.8c.5.1.9.2 1.4.3l-.7 2.8 1.7.4.7-2.8c2.9.6 5.1.3 6.1-2.3.7-2.1 0-3.4-1.6-4.2 1.1-.3 2-1 2.2-2.5zm-4 5.5c-.5 2.1-4.1 1-5.3.7l.9-3.8c1.2.3 4.9.9 4.4 3.1zm.5-5.6c-.5 1.9-3.5 1-4.5.7l.9-3.5c1 .2 4.1.7 3.6 2.8z" fill="white"/>
+        </svg>
+      </div>
+      <div><div class="crypto-name">Bitcoin</div><div class="crypto-sub">BTC · Best Rates</div></div>
+    </div>
+
+    <!-- Ethereum -->
+    <div class="crypto-card" style="--c:#627eea">
+      <div class="crypto-logo" style="background:#627eea20;">
+        <svg width="26" height="26" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#627EEA"/>
+          <path d="M16.498 6v8.87l7.497 3.35z" fill="white" opacity=".6"/>
+          <path d="M16.498 6L9 18.22l7.498-3.35z" fill="white"/>
+          <path d="M16.498 21.968v6.027L24 19.616z" fill="white" opacity=".6"/>
+          <path d="M16.498 27.995v-6.028L9 19.616z" fill="white"/>
+          <path d="M16.498 20.573l7.497-4.353-7.497-3.348z" fill="white" opacity=".2"/>
+          <path d="M9 16.22l7.498 4.353v-7.701z" fill="white" opacity=".6"/>
+        </svg>
+      </div>
+      <div><div class="crypto-name">Ethereum</div><div class="crypto-sub">ETH · Fast Trades</div></div>
+    </div>
+
+    <!-- USDT -->
+    <div class="crypto-card" style="--c:#26a17b">
+      <div class="crypto-logo" style="background:#26a17b20;">
+        <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+          <path d="M17.9 17.4v-.1c-.1 0-.7.1-1.9.1-1 0-1.7 0-2-.1-3.9-.2-6.8-.8-6.8-1.7s2.9-1.5 6.8-1.7v2.6c.3 0 1 .1 2 .1 1.2 0 1.8-.1 1.9-.1v-2.6c3.9.2 6.8.8 6.8 1.7s-2.9 1.5-6.8 1.7m0-3.6v-2.4H23V8.5H9v2.9h5.1v2.4c-4.4.2-7.7 1.1-7.7 2.1s3.3 1.9 7.7 2.1v7.6h3.8v-7.6c4.4-.2 7.7-1.1 7.7-2.1s-3.3-1.9-7.7-2.1" fill="white"/>
+        </svg>
+      </div>
+      <div><div class="crypto-name">USDT Tether</div><div class="crypto-sub">USDT · Stable</div></div>
+    </div>
+
+    <!-- TRON -->
+    <div class="crypto-card" style="--c:#eb0029">
+      <div class="crypto-logo" style="background:#eb002920;">
+        <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#EB0029"/>
+          <path d="M22 10l-13.5 3.5 5.5 9.5 9-8.5L22 10zm-13.5 3.5l7 2-1 5.5-6-7.5zm7 2l6-2-5 5-1-3z" fill="white"/>
+        </svg>
+      </div>
+      <div><div class="crypto-name">TRON</div><div class="crypto-sub">TRX · Fast</div></div>
+    </div>
+
+    <!-- PayPal FULL WIDTH -->
+    <div class="crypto-card" style="--c:#009cde;grid-column:span 2;background:linear-gradient(135deg,rgba(0,48,135,.12),rgba(0,156,222,.07));">
+      <div style="background:#003087;border-radius:8px;padding:8px 14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <!-- PayPal real wordmark SVG -->
+        <svg height="20" viewBox="0 0 124 33" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.5 3.5H8.3c-.5 0-.9.4-1 .8L4.6 23.2c-.1.3.2.6.5.6h3.6c.5 0 .9-.4 1-.8l.9-5.5c.1-.5.5-.8 1-.8h2.5c5.2 0 8.2-2.5 9-7.5.3-2.2 0-3.9-1-5.1-1.1-1.3-3.1-2-5.6-2zM16.5 11c-.4 2.8-2.6 2.8-4.7 2.8H10.6l.8-5.3c.1-.3.3-.5.6-.5h.5c1.4 0 2.8 0 3.5.8.4.5.5 1.2.5 2.2z" fill="white"/>
+          <path d="M42.9 10.7h-3.6c-.3 0-.6.2-.6.5l-.2 1-.3-.4c-.8-1.2-2.6-1.6-4.4-1.6-4.2 0-7.7 3.1-8.4 7.5-.4 2.2.2 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.2-2.1 5.2-2.1l-.2 1c-.1.3.2.6.5.6h3.3c.5 0 .9-.4 1-.8l2-12.4c.1-.4-.2-.6-.4-.6zM38.1 18c-.4 2.2-2.1 3.6-4.2 3.6-1.1 0-2-.3-2.5-1-.5-.7-.7-1.6-.6-2.6.3-2.1 2.1-3.6 4.2-3.6 1.1 0 2 .3 2.5 1 .5.7.7 1.6.6 2.6z" fill="white"/>
+          <path d="M64.3 10.7h-3.7c-.4 0-.7.2-.9.5l-5.2 7.6-2.2-7.3c-.1-.5-.6-.8-1-.8h-3.6c-.4 0-.7.4-.5.8l4.1 12.1-3.9 5.5c-.3.4 0 1 .5 1h3.6c.4 0 .7-.2.9-.5l12.5-18c.3-.4 0-.9-.6-.9z" fill="white"/>
+          <path d="M78.2 3.5H71c-.5 0-.9.4-1 .8l-2.7 17.1c-.1.3.2.6.5.6h3.9c.3 0 .6-.2.7-.6l.9-5.7c.1-.5.5-.8 1-.8h2.5c5.2 0 8.2-2.5 9-7.5.3-2.2 0-3.9-1-5.1-1.1-1.3-3.1-2-5.6-2zM79.2 11c-.4 2.8-2.6 2.8-4.7 2.8H73.3l.8-5.3c.1-.3.3-.5.6-.5h.5c1.4 0 2.8 0 3.5.8.4.5.6 1.2.5 2.2z" fill="#009CDE"/>
+          <path d="M105.6 10.7H102c-.3 0-.6.2-.6.5l-.2 1-.3-.4c-.8-1.2-2.6-1.6-4.4-1.6-4.2 0-7.7 3.1-8.4 7.5-.4 2.2.2 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.2-2.1 5.2-2.1l-.2 1c-.1.3.2.6.5.6h3.3c.5 0 .9-.4 1-.8l2-12.4c0-.4-.2-.6-.4-.6zM100.8 18c-.4 2.2-2.1 3.6-4.2 3.6-1.1 0-2-.3-2.5-1-.5-.7-.7-1.6-.6-2.6.3-2.1 2.1-3.6 4.2-3.6 1.1 0 2 .3 2.5 1 .5.7.7 1.6.6 2.6z" fill="#009CDE"/>
+          <path d="M113.2 4l-2.8 17.5c-.1.3.2.6.5.6h3.2c.5 0 .9-.4 1-.8L117.9 4c.1-.3-.2-.6-.5-.6h-3.5c-.4 0-.6.2-.7.6z" fill="#009CDE"/>
+        </svg>
+      </div>
+      <div><div class="crypto-name">PayPal Funds</div><div class="crypto-sub">Verified balance · Accepted daily</div></div>
+    </div>
+
+  </div>
+
+  <!-- GIFT CARDS WITH REAL LOGOS -->
+  <div class="giftcard-block">
+    <div class="gc-header">
+      <div class="gc-header-tag">Gift Cards</div>
+      <div class="gc-header-title">We Buy All Popular Gift Cards</div>
+      <div class="gc-header-sub">Any denomination. Instant quotes. Just DM us the card type + amount.</div>
+    </div>
+    <div class="gc-grid">
+
+      <!-- Apple / iTunes -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" fill="white"/>
+          </svg>
+        </div>
+        <div class="gc-name">iTunes</div>
+      </div>
+
+      <!-- Amazon -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="36" height="22" viewBox="0 0 80 24" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="18" font-family="Arial" font-weight="900" font-size="18" fill="#FF9900">amazon</text>
+          </svg>
+        </div>
+        <div class="gc-name">Amazon</div>
+      </div>
+
+      <!-- Google Play -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="28" height="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.7 44.5c.9.6 2 .7 3.1.2l24-13.8-6.1-6.1z" fill="#EA4335"/>
+            <path d="M44 21.5c-.7-.8-1.6-1.2-2.5-1.2l-9 5.1 6.5 6.5 3.4-1.9c1.3-.7 2-1.9 2-3.2 0-1.2-.7-2.3-1.9-3.3z" fill="#FBBC04"/>
+            <path d="M4.7 3.5C4.2 4 4 4.7 4 5.5v37c0 .8.2 1.5.7 2l.1.1 20.7-20.7v-.5z" fill="#4285F4"/>
+            <path d="M25.7 24.4l6.8-6.8-24-13.8c-1-.6-2.1-.7-3.1-.2z" fill="#34A853"/>
+          </svg>
+        </div>
+        <div class="gc-name">Google Play</div>
+      </div>
+
+      <!-- Steam -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="28" height="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="22" fill="#1b2838"/>
+            <path d="M24 7C14.6 7 7 14.6 7 24c0 7.4 4.6 13.8 11.2 16.4l4-8.3c-.2-.4-.4-.8-.4-1.2 0-1.5 1.2-2.8 2.8-2.8s2.8 1.2 2.8 2.8c0 1.4-1 2.5-2.4 2.7l-4.6 3.3c1.2.3 2.4.5 3.6.5 9.4 0 17-7.6 17-17S33.4 7 24 7zm3.5 18c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4-4-1.8-4-4z" fill="#c6d4df"/>
+          </svg>
+        </div>
+        <div class="gc-name">Steam</div>
+      </div>
+
+      <!-- Visa Gift Card -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="36" height="22" viewBox="0 0 80 32" xmlns="http://www.w3.org/2000/svg">
+            <rect width="80" height="32" rx="4" fill="#1a1f71"/>
+            <text x="40" y="23" text-anchor="middle" font-family="Arial" font-weight="900" font-size="20" fill="white">VISA</text>
+          </svg>
+        </div>
+        <div class="gc-name">Visa Gift</div>
+      </div>
+
+      <!-- eBay -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="38" height="22" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="24" font-family="Arial" font-weight="900" font-size="28">
+              <tspan fill="#E53238">e</tspan><tspan fill="#0064D2">b</tspan><tspan fill="#F5AF02">a</tspan><tspan fill="#86B817">y</tspan>
+            </text>
+          </svg>
+        </div>
+        <div class="gc-name">eBay</div>
+      </div>
+
+      <!-- Walmart Spark -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="30" height="30" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="#0071CE"/>
+            <g fill="#FFC220">
+              <rect x="47" y="12" width="6" height="22" rx="3"/>
+              <rect x="47" y="66" width="6" height="22" rx="3"/>
+              <rect x="12" y="47" width="22" height="6" rx="3"/>
+              <rect x="66" y="47" width="22" height="6" rx="3"/>
+              <rect x="24" y="24" width="6" height="22" rx="3" transform="rotate(45 27 35)"/>
+              <rect x="58" y="58" width="6" height="22" rx="3" transform="rotate(45 61 69)"/>
+              <rect x="58" y="18" width="6" height="22" rx="3" transform="rotate(-45 61 29)"/>
+              <rect x="24" y="52" width="6" height="22" rx="3" transform="rotate(-45 27 63)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="gc-name">Walmart</div>
+      </div>
+
+      <!-- Nordstrom -->
+      <div class="gc-item">
+        <div class="gc-logo">
+          <svg width="34" height="22" viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg">
+            <rect width="80" height="28" rx="3" fill="#111"/>
+            <text x="40" y="19" text-anchor="middle" font-family="Arial" font-weight="700" font-size="8.5" fill="white" letter-spacing="0.5">NORDSTROM</text>
+          </svg>
+        </div>
+        <div class="gc-name">Nordstrom</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps" id="how">
+  <p class="sec-label">Simple Process</p>
+  <h2 class="sec-title">How To Trade</h2>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">01</div>
+      <div><div class="step-title">Send a DM on WhatsApp</div><div class="step-desc">Message us with what you want to sell — asset type, amount, and denomination.</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">02</div>
+      <div><div class="step-title">Get a Rate Quote</div><div class="step-desc">We give you the current rate immediately. No hidden fees, no wahala.</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">03</div>
+      <div><div class="step-title">Send Your Asset</div><div class="step-desc">Transfer crypto or send gift card code/image securely.</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">04</div>
+      <div><div class="step-title">Receive Your Payment</div><div class="step-desc">Payment hits your account instantly. Fast, clean, done.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <p class="sec-label">Why Choose Us</p>
+  <h2 class="sec-title">Built On Trust</h2>
+  <div class="trust-stats">
+    <div class="trust-stat"><span class="trust-num">24/7</span><span class="trust-label">Always Active</span></div>
+    <div class="trust-stat"><span class="trust-num">Fast</span><span class="trust-label">Payment Speed</span></div>
+    <div class="trust-stat"><span class="trust-num">100%</span><span class="trust-label">Legit & Safe</span></div>
+  </div>
+  <div class="trust-badges">
+    <div class="badge"><div class="dot"></div>Certified Trader</div>
+    <div class="badge"><div class="dot"></div>Trusted by 1000+ Customers</div>
+    <div class="badge"><div class="dot"></div>Sweet Rates Daily</div>
+    <div class="badge"><div class="dot"></div>No Hidden Fees</div>
+    <div class="badge"><div class="dot"></div>Instant Settlement</div>
+    <div class="badge"><div class="dot"></div>Active 24/7</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-block">
+  <p class="cta-eyebrow">Ready To Trade?</p>
+  <h2 class="cta-heading">Start Now.<br/>Get Paid Fast.</h2>
+  <p class="cta-sub">No stress. No delay. Sweet rates<br/>and fast payment — every time.</p>
+  <span class="cta-phone">+233 502 850 111</span>
+  <a href="https://wa.me/2335028501111" class="wa-big"><span>💬</span> Chat Us On WhatsApp</a>
+</div>
+
+<footer>
+  <div class="footer-brand"><div class="nav-dot"></div>Chizzy Exchange</div>
+  <span class="footer-copy">© 2025 Chizzy Exchange · Trade Smart</span>
+</footer>
+
+</body>
+</html>
